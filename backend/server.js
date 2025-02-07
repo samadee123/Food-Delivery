@@ -6,6 +6,7 @@ import userRouter from "./routes/userRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import couponRoute from "./routes/couponRoute.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -28,7 +29,7 @@ app.use("/api/user",userRouter)
 app.use("/api/cart",cartRouter);
 app.use("/api/order",orderRouter);
 app.use("/api/coupons", couponRoute);
-
+app.use("/api/dashboard", dashboardRoutes);
 
 
 app.get("/",(req,res)=>{
