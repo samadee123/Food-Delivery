@@ -37,13 +37,31 @@ const removeFromCart = async (req, res) => {
 // fetch user cart data
 const getCart = async (req, res) => {
     try {
-        let userData = await userModel.findById(req.body.userId);
-        let cartData = await userData.cartData;
-        res.json({success:true,cartData})
+        const userId = req.user.id; // Ensure userId is coming from authentication middleware
+        const user = await userModel.findById(userId);
+
+        // Debugging logs
+        console.log("Fetched User:", user);
+
+        // If user does not exist
+        if (!user) {
+            console.warn("User not found!");
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // If user.cartData is null, initialize it
+        if (!user.cartData) {
+            console.warn("cartData is null, initializing...");
+            user.cartData = {}; // Set cartData as an empty object
+            await user.save(); // Save updated user data
+        }
+
+        res.json({ success: true, cartData: user.cartData });
+
     } catch (error) {
-        console.log(error);
-        res.json({success:false,message:"Error"});
+        console.error("Error fetching cart:", error);
+        res.status(500).json({ success: false, message: "Server error" });
     }
-}
+};
 
 export { addToCart, removeFromCart, getCart }
